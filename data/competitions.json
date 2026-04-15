@@ -1,0 +1,107 @@
+{
+  "competitions": [
+    {
+      "id": "spring-show-2025",
+      "name": "Spring Championship Show 2025",
+      "date": "March 15-16, 2025",
+      "description": "Our flagship spring event featuring all breeds and disciplines. Open to all ages and experience levels.",
+      "status": "completed",
+      "banner": "/images/competitions/spring-show/banner.jpg",
+      "classes": [
+        {
+          "id": "best-stallion",
+          "name": "Best Stallion",
+          "description": "Open to all stallions 4 years and over. Judged on conformation, movement, and presence.",
+          "folder": "/images/competitions/spring-show/class-1/",
+          "winner": "winner.jpg",
+          "entries": ["entry1.jpg", "entry2.jpg", "entry3.jpg"]
+        },
+        {
+          "id": "best-mare",
+          "name": "Best Mare",
+          "description": "Open to all mares 4 years and over. Judged on conformation, type, and quality.",
+          "folder": "/images/competitions/spring-show/class-2/",
+          "winner": "winner.jpg",
+          "entries": ["entry1.jpg", "entry2.jpg"]
+        },
+        {
+          "id": "best-youngstock",
+          "name": "Best Youngstock",
+          "description": "Open to horses and ponies aged 1-3 years. Future stars of the show ring.",
+          "folder": "/images/competitions/spring-show/class-3/",
+          "winner": "winner.jpg",
+          "entries": ["entry1.jpg", "entry2.jpg", "entry3.jpg", "entry4.jpg"]
+        }
+      ]
+    },
+    {
+      "id": "summer-classic-2025",
+      "name": "Summer Classic 2025",
+      "date": "June 20-22, 2025",
+      "description": "Three days of spectacular showing across multiple disciplines. Join us for the ultimate summer horse show experience.",
+      "status": "upcoming",
+      "banner": "/images/competitions/summer-classic/banner.jpg",
+      "classes": [
+        {
+          "id": "show-jumping",
+          "name": "Show Jumping",
+          "description": "Riders and horses compete over a course of coloured fences in an enclosed arena.",
+          "folder": "/images/competitions/summer-classic/class-1/",
+          "winner": "winner.jpg",
+          "entries": ["entry1.jpg", "entry2.jpg"]
+        },
+        {
+          "id": "dressage",
+          "name": "Dressage",
+          "description": "The art of horse riding and training. Horses and riders perform a series of movements.",
+          "folder": "/images/competitions/summer-classic/class-2/",
+          "winner": "winner.jpg",
+          "entries": ["entry1.jpg"]
+        }
+      ]
+    },
+    {
+      "id": "autumn-grand-prix-2025",
+      "name": "Autumn Grand Prix 2025",
+      "date": "September 5-7, 2025",
+      "description": "The grand finale of the show season. Only the best compete for the ultimate titles.",
+      "status": "upcoming",
+      "banner": "/images/competitions/autumn-grand-prix/banner.jpg",
+      "classes": [
+        {
+          "id": "grand-champion",
+          "name": "Grand Champion",
+          "description": "The most prestigious title of the show season. Open to all supreme champions.",
+          "folder": "/images/competitions/autumn-grand-prix/class-1/",
+          "winner": "winner.jpg",
+          "entries": []
+        }
+      ]
+    }
+  ],
+  "slideshow": [
+    "/images/slideshow/slide1.jpg",
+    "/images/slideshow/slide2.jpg",
+    "/images/slideshow/slide3.jpg"
+  ],
+  "sponsors": [
+    {
+      "name": "EquiSupplies",
+      "logo": "/images/sponsors/equisupplies.png",
+      "website": "#",
+      "tier": "gold"
+    },
+    {
+      "name": "HorseCare Pro",
+      "logo": "/images/sponsors/horsecuarepro.png",
+      "website": "#",
+      "tier": "silver"
+    },
+    {
+      "name": "Stable Solutions",
+      "logo": "/images/sponsors/stablesolutions.png",
+      "website": "#",
+      "tier": "bronze"
+    }
+  ]
+}
