@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
-import { Trophy, Mail, ExternalLink } from "lucide-react";
+import { Trophy, Mail } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
+  const { tr } = useLanguage();
+
   return (
     <footer className="bg-slate-900 text-slate-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -17,40 +22,27 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
-              The premier online horse show platform. Celebrating equestrian
-              excellence from the comfort of your home.
+              {tr.footer_tagline}
             </p>
-            <div className="flex items-center gap-3 mt-4">
-              {["Instagram", "Facebook", "X (Twitter)"].map((name) => (
-                <a
-                  key={name}
-                  href="#"
-                  className="w-9 h-9 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-slate-700 transition-colors text-xs font-bold"
-                  aria-label={name}
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              ))}
-              <a
-                href="mailto:info@equineshow.online"
-                className="w-9 h-9 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-slate-700 transition-colors"
-                aria-label="Email"
-              >
-                <Mail className="w-4 h-4" />
-              </a>
-            </div>
+            <a
+              href="mailto:info@equineshow.online"
+              className="mt-4 inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm"
+            >
+              <Mail className="w-4 h-4" />
+              info@equineshow.online
+            </a>
           </div>
 
-          {/* Links */}
+          {/* Platform links */}
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
-              Platform
+              {tr.footer_platform}
             </h4>
             <ul className="space-y-2">
               {[
-                { href: "/competitions", label: "Competitions" },
-                { href: "/about", label: "About Us" },
-                { href: "/sponsors", label: "Sponsors" },
+                { href: "/competitions", label: tr.nav_competitions },
+                { href: "/about", label: tr.nav_about },
+                { href: "/sponsors", label: tr.nav_sponsors },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -64,24 +56,25 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Support links */}
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
-              Support
+              {tr.footer_support}
             </h4>
             <ul className="space-y-2">
               {[
-                { href: "#", label: "How it Works" },
-                { href: "#", label: "FAQs" },
-                { href: "#", label: "Contact Us" },
-                { href: "#", label: "Privacy Policy" },
+                { href: "/about#how-it-works", label: tr.footer_how },
+                { href: "/faq", label: tr.footer_faq },
+                { href: "mailto:info@equineshow.online", label: tr.footer_contact },
+                { href: "/privacy", label: tr.footer_privacy },
               ].map((link) => (
                 <li key={link.label}>
-                  <Link
+                  <a
                     href={link.href}
                     className="text-sm text-slate-400 hover:text-white transition-colors"
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -90,10 +83,10 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-500">
-            © {new Date().getFullYear()} EquineShow Online. All rights reserved.
+            © {new Date().getFullYear()} EquineShow Online. {tr.footer_copy}
           </p>
           <p className="text-xs text-slate-500">
-            Built with passion for the equestrian community.
+            {tr.footer_made}
           </p>
         </div>
       </div>

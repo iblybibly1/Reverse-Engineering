@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Calendar, ChevronRight, ArrowLeft, Trophy } from "lucide-react";
+import { Calendar, ArrowLeft, Trophy } from "lucide-react";
 import SafeImage from "@/components/ui/SafeImage";
 import { getCompetition, getAllCompetitions } from "@/lib/data";
 import ClassCard from "@/components/competitions/ClassCard";
 import Badge from "@/components/ui/Badge";
+import CompetitionEntryButton from "@/components/competitions/CompetitionEntryButton";
 
 export async function generateStaticParams() {
   const competitions = getAllCompetitions();
@@ -20,9 +21,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 }
 
 const statusConfig = {
-  completed: { label: "Completed", variant: "success" as const },
-  upcoming: { label: "Upcoming", variant: "info" as const },
-  ongoing: { label: "Live Now", variant: "warning" as const },
+  completed: { label: "Päättynyt", variant: "success" as const },
+  upcoming: { label: "Tuleva", variant: "info" as const },
+  ongoing: { label: "Käynnissä", variant: "warning" as const },
 };
 
 export default async function CompetitionPage({ params }: { params: Promise<{ id: string }> }) {
@@ -43,7 +44,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ id
           fill
           className="object-cover opacity-60"
           priority
-          fallback="https://placehold.co/1600x600/1e3a5f/ffffff?text=Horse+Show"
+          fallback="/images/hero-horse.jpg"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/70" />
         <div className="absolute inset-0 flex flex-col justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
@@ -51,7 +52,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ id
             href="/competitions"
             className="flex items-center gap-1.5 text-white/70 hover:text-white text-sm font-medium mb-4 w-fit transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" /> All Competitions
+            <ArrowLeft className="w-4 h-4" /> Kaikki kilpailut
           </Link>
           <div className="flex items-center gap-3 flex-wrap">
             <Badge variant={status.variant}>{status.label}</Badge>
@@ -65,21 +66,26 @@ export default async function CompetitionPage({ params }: { params: Promise<{ id
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Description */}
+        {/* Description + entry button */}
         <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm mb-8">
           <p className="text-slate-600 leading-relaxed">{competition.description}</p>
-          <div className="mt-4 flex items-center gap-4 text-sm text-slate-400">
-            <div className="flex items-center gap-1.5">
+          <div className="mt-4 flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-1.5 text-sm text-slate-400">
               <Trophy className="w-4 h-4" />
-              {competition.classes.length} classes
+              {competition.classes.length} luokkaa
             </div>
+            <CompetitionEntryButton
+              competitionId={competition.id}
+              competitionName={competition.name}
+              classes={competition.classes.map((c) => ({ id: c.id, name: c.name }))}
+            />
           </div>
         </div>
 
         {/* Classes grid */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Classes</h2>
-          <p className="text-slate-500 text-sm">Select a class to view entries and winners.</p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Luokat</h2>
+          <p className="text-slate-500 text-sm">Valitse luokka nähdäksesi osallistumiset ja voittajat.</p>
         </div>
 
         {competition.classes.length > 0 ? (
@@ -90,7 +96,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ id
           </div>
         ) : (
           <div className="text-center py-16 text-slate-400">
-            <p>No classes added yet. Check back soon.</p>
+            <p>Ei luokkia vielä. Tarkista myöhemmin uudelleen.</p>
           </div>
         )}
       </div>

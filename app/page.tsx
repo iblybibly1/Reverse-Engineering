@@ -1,20 +1,17 @@
+"use client";
+
 import Link from "next/link";
-import { ChevronRight, Trophy, Users, Star, Shield } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Slideshow from "@/components/ui/Slideshow";
 import CompetitionCard from "@/components/competitions/CompetitionCard";
 import { getAllCompetitions, getSlideshowImages } from "@/lib/data";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HomePage() {
+  const { tr } = useLanguage();
   const competitions = getAllCompetitions();
   const slideshowImages = getSlideshowImages();
   const featured = competitions.slice(0, 3);
-
-  const stats = [
-    { icon: Trophy, label: "Competitions Hosted", value: "120+" },
-    { icon: Users, label: "Participants", value: "5,000+" },
-    { icon: Star, label: "Classes Judged", value: "800+" },
-    { icon: Shield, label: "Years Running", value: "10+" },
-  ];
 
   return (
     <>
@@ -27,47 +24,31 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-medium mb-6 border border-white/30">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              The Premier Online Horse Show Platform
+              {tr.hero_badge}
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-lg">
-              Celebrating<br />
-              <span className="text-blue-300">Equestrian</span><br />
-              Excellence
+              {tr.hero_title_1}<br />
+              <span className="text-blue-300">{tr.hero_title_2}</span><br />
+              {tr.hero_title_3}
             </h1>
             <p className="mt-6 text-lg text-white/80 max-w-lg leading-relaxed drop-shadow">
-              Browse competitions, view stunning entries, and celebrate winners
-              from the world&apos;s best online horse shows.
+              {tr.hero_sub}
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/competitions"
                 className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3.5 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-blue-600/30"
               >
-                Browse Competitions
+                {tr.hero_browse}
                 <ChevronRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/about"
                 className="inline-flex items-center justify-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-semibold px-6 py-3.5 rounded-xl border border-white/30 transition-all"
               >
-                Learn More
+                {tr.hero_learn}
               </Link>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="py-12 bg-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map(({ icon: Icon, label, value }) => (
-              <div key={label} className="text-center">
-                <Icon className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-white">{value}</div>
-                <div className="text-slate-400 text-sm mt-1">{label}</div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -77,11 +58,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
             <div>
-              <p className="text-blue-600 font-semibold text-sm uppercase tracking-wider mb-2">Featured</p>
-              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">Current &amp; Upcoming Shows</h2>
+              <p className="text-blue-600 font-semibold text-sm uppercase tracking-wider mb-2">{tr.feat_badge}</p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">{tr.feat_title}</h2>
             </div>
             <Link href="/competitions" className="flex items-center gap-1.5 text-blue-600 font-semibold hover:gap-2.5 transition-all text-sm">
-              View all competitions <ChevronRight className="w-4 h-4" />
+              {tr.feat_all} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -98,19 +79,19 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="py-20 bg-slate-50">
+      <section id="how-it-works" className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <p className="text-blue-600 font-semibold text-sm uppercase tracking-wider mb-2">Simple Process</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">How It Works</h2>
-            <p className="mt-3 text-slate-500 max-w-lg mx-auto">Participating in an online horse show has never been easier.</p>
+            <p className="text-blue-600 font-semibold text-sm uppercase tracking-wider mb-2">{tr.hiw_badge}</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">{tr.hiw_title}</h2>
+            <p className="mt-3 text-slate-500 max-w-lg mx-auto">{tr.hiw_sub}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { step: "01", title: "Browse Shows", desc: "Explore our schedule of upcoming and current online shows across all disciplines." },
-              { step: "02", title: "Enter a Class", desc: "Select your class, upload your photos or videos, and submit your entry online." },
-              { step: "03", title: "See Results", desc: "View judging results, winner announcements, and gallery photos from every class." },
+              { step: "01", title: tr.hiw_1_title, desc: tr.hiw_1_desc },
+              { step: "02", title: tr.hiw_2_title, desc: tr.hiw_2_desc },
+              { step: "03", title: tr.hiw_3_title, desc: tr.hiw_3_desc },
             ].map((item) => (
               <div key={item.step} className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
                 <div className="text-6xl font-black text-blue-50 mb-4 leading-none select-none font-mono">{item.step}</div>
@@ -125,22 +106,22 @@ export default function HomePage() {
       {/* CTA */}
       <section className="py-20 bg-gradient-to-br from-blue-600 to-violet-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to Show Your Horse?</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">{tr.cta_title}</h2>
           <p className="text-blue-100 text-lg mb-8 max-w-xl mx-auto">
-            Join thousands of equestrians who compete online from anywhere in the world.
+            {tr.cta_sub}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/competitions"
               className="inline-flex items-center justify-center gap-2 bg-white text-blue-700 font-bold px-8 py-4 rounded-xl hover:bg-blue-50 transition-colors shadow-lg"
             >
-              Browse Shows <ChevronRight className="w-4 h-4" />
+              {tr.cta_browse} <ChevronRight className="w-4 h-4" />
             </Link>
             <Link
               href="/sponsors"
               className="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/30 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-colors"
             >
-              Become a Sponsor
+              {tr.cta_sponsor}
             </Link>
           </div>
         </div>

@@ -4,18 +4,20 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Trophy } from "lucide-react";
-
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/competitions", label: "Competitions" },
-  { href: "/about", label: "About" },
-  { href: "/sponsors", label: "Sponsors" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageToggle from "@/components/ui/LanguageToggle";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { tr } = useLanguage();
+
+  const navLinks = [
+    { href: "/competitions", label: tr.nav_competitions },
+    { href: "/about", label: tr.nav_about },
+    { href: "/sponsors", label: tr.nav_sponsors },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -65,22 +67,28 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+            <div className="ml-3">
+              <LanguageToggle />
+            </div>
             <Link
               href="/competitions"
-              className="ml-4 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              className="ml-3 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Enter a Show
+              {tr.nav_enter}
             </Link>
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile: language toggle + hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            <LanguageToggle />
+            <button
+              className="p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu */}
@@ -107,7 +115,7 @@ export default function Navbar() {
               href="/competitions"
               className="mt-2 px-4 py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg text-center hover:bg-blue-700 transition-colors"
             >
-              Enter a Show
+              {tr.nav_enter}
             </Link>
           </div>
         </div>
