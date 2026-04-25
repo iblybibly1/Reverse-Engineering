@@ -5,7 +5,7 @@ export interface ClassEntry {
   name: string;
   description: string;
   folder: string;
-  winner: string;
+  winner: string | null;
   entries: string[];
 }
 
@@ -13,8 +13,9 @@ export interface Competition {
   id: string;
   name: string;
   date: string;
+  closingDate?: string;
   description: string;
-  status: 'completed' | 'upcoming' | 'ongoing';
+  status: 'completed' | 'upcoming' | 'ongoing' | 'open';
   banner: string;
   classes: ClassEntry[];
 }

@@ -10,7 +10,7 @@ interface ClassCardProps {
 }
 
 export default function ClassCard({ competitionId, classEntry }: ClassCardProps) {
-  const winnerSrc = getImageUrl(classEntry.folder, classEntry.winner);
+  const winnerSrc = classEntry.winner ? getImageUrl(classEntry.folder, classEntry.winner) : "";
 
   return (
     <Link

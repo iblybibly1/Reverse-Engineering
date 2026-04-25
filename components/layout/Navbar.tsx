@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCart } from "@/contexts/CartContext";
 import LanguageToggle from "@/components/ui/LanguageToggle";
+import { ShoppingCart, Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/competitions", fi: "Kilpailut", en: "Shows" },
-  { href: "/about", fi: "Tietoa", en: "How it works" },
+  { href: "/about", fi: "Miten toimii", en: "How it works" },
   { href: "/sponsors", fi: "Sponsorit", en: "Sponsors" },
   { href: "/faq", fi: "UKK", en: "FAQ" },
 ];
@@ -16,50 +18,57 @@ const NAV_LINKS = [
 export default function Navbar() {
   const pathname = usePathname();
   const { lang } = useLanguage();
-  const [open, setOpen] = useState(false);
+  const { count, openCart } = useCart();
+  const fi = lang === "fi";
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   return (
-    <header className="suomi-nav">
-      <div className="suomi-nav-inner">
-        <Link href="/" className="suomi-nav-logo">
-          <span className="crest">S</span>
-          <span>Suomi Horse Show</span>
+    <header className="nav">
+      <div className="nav-inner">
+        <Link href="/" className="nav-logo">
+          <span className="nav-logo-icon">🐴</span>
+          <span>Nättely Suomi</span>
         </Link>
 
-        <nav className="suomi-nav-links">
+        <nav className="nav-links">
           {NAV_LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className={pathname.startsWith(l.href) ? "active" : ""}>
-              {lang === "fi" ? l.fi : l.en}
+            <Link key={l.href} href={l.href} className={`nav-link${pathname.startsWith(l.href) ? " active" : ""}`}>
+              {fi ? l.fi : l.en}
             </Link>
           ))}
         </nav>
 
-        <div className="suomi-nav-cta">
+        <div className="nav-actions">
           <LanguageToggle />
-          <Link href="/competitions" className="btn-suomi sm">
-            {lang === "fi" ? "Ilmoittaudu" : "Enter a show"}
+
+          <button className="cart-btn" onClick={openCart} aria-label={fi ? "Ostoskori" : "Cart"}>
+            <ShoppingCart size={18} />
+            {count > 0 && <span className="cart-count">{count}</span>}
+          </button>
+
+          <Link href="/competitions" className="btn btn-primary btn-sm" style={{ marginLeft: 4 }}>
+            {fi ? "Ilmoittaudu" : "Enter a show"}
           </Link>
-          <button
-            onClick={() => setOpen(!open)}
-            aria-label="Menu"
-            style={{ display: "none" }}
-            className="suomi-hamburger"
-          >
-            ☰
+
+          <button onClick={() => setMobileOpen((o) => !o)} className="btn btn-ghost btn-sm" aria-label="Menu" style={{ padding: "7px 10px", display: "none" }}>
+            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
 
-      {open && (
-        <div style={{ borderTop: "1px solid var(--rule)", padding: "16px var(--pad)" }}>
+      {mobileOpen && (
+        <div style={{ borderTop: "1px solid var(--border)", padding: "12px var(--pad)", background: "white" }}>
           {NAV_LINKS.map((l) => (
-            <Link key={l.href} href={l.href} onClick={() => setOpen(false)}
-              style={{ display: "block", padding: "10px 0", fontSize: 15 }}>
-              {lang === "fi" ? l.fi : l.en}
+            <Link key={l.href} href={l.href} onClick={() => setMobileOpen(false)}
+              style={{ display: "block", padding: "10px 12px", fontSize: 15, fontWeight: 500, color: pathname.startsWith(l.href) ? "var(--brand)" : "var(--text)", borderRadius: "var(--r-sm)" }}>
+              {fi ? l.fi : l.en}
             </Link>
           ))}
+          <Link href="/competitions" className="btn btn-primary btn-full" style={{ marginTop: 12 }} onClick={() => setMobileOpen(false)}>
+            {fi ? "Ilmoittaudu kilpailuun" : "Enter a show"}
+          </Link>
         </div>
       )}
     </header>

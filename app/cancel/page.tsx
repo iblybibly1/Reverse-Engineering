@@ -1,24 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { XCircle } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { XCircle, ArrowLeft } from "lucide-react";
 
 export default function CancelPage() {
-  const { tr } = useLanguage();
-
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 pt-16">
-      <div className="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full text-center">
-        <XCircle className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-slate-900 mb-3">{tr.cancel_title}</h1>
-        <p className="text-slate-500 mb-8">{tr.cancel_sub}</p>
-        <Link
-          href="/competitions"
-          className="inline-flex items-center justify-center gap-2 bg-slate-900 text-white font-bold px-6 py-3 rounded-xl hover:bg-slate-800 transition-colors"
-        >
-          {tr.cancel_back}
+    <div style={{ background: "var(--bg)", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "80px 24px", textAlign: "center" }}>
+      <div style={{ width: 72, height: 72, borderRadius: "50%", background: "var(--bg-muted)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}>
+        <XCircle size={36} color="var(--text-muted)" />
+      </div>
+
+      <h1 style={{ fontSize: 32, marginBottom: 12 }}>Payment cancelled</h1>
+      <p style={{ fontSize: 16, color: "var(--text-muted)", maxWidth: 400, lineHeight: 1.7, marginBottom: 32 }}>
+        No worries — your cart is still saved. You can try again whenever you&apos;re ready.
+      </p>
+
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+        <Link href="/cart" className="btn btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+          <ArrowLeft size={16} /> Back to cart
         </Link>
+        <Link href="/competitions" className="btn btn-secondary">Browse shows</Link>
       </div>
     </div>
   );

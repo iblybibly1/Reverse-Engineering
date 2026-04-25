@@ -12,6 +12,7 @@ const statusConfig = {
   completed: { label: "Completed", variant: "success" as const },
   upcoming: { label: "Upcoming", variant: "info" as const },
   ongoing: { label: "Live Now", variant: "warning" as const },
+  open: { label: "Entries Open", variant: "success" as const },
 };
 
 export default function CompetitionCard({ competition }: CompetitionCardProps) {

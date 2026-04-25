@@ -3,7 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import CartDrawer from "@/components/ui/CartDrawer";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { CartProvider } from "@/contexts/CartContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,13 +14,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "EquineShow Online — Online Horse Show Platform",
+  title: "Nättely Suomi — Online Horse Shows",
   description:
-    "The premier online horse show platform. View competitions, browse class winners, and celebrate equestrian excellence.",
-  keywords: "horse show, online horse show, equestrian, competition, classes, winners",
+    "Finland's leading online horse show platform. Enter from your yard, get judged by licensed professionals, and win real rosettes delivered to your door.",
+  keywords: "horse show, online horse show, equestrian, nättely, hevosshow, Finland, competition",
   openGraph: {
-    title: "EquineShow Online",
-    description: "The premier online horse show platform.",
+    title: "Nättely Suomi — Online Horse Shows",
+    description: "Finland's leading online horse show platform.",
     type: "website",
   },
 };
@@ -27,15 +29,18 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full scroll-smooth`}>
+    <html lang="fi" className={`${inter.variable} h-full scroll-smooth`}>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
-      <body className="min-h-full flex flex-col bg-white text-slate-900 antialiased">
+      <body className="min-h-full flex flex-col antialiased" style={{ background: "var(--bg)", color: "var(--text)" }}>
         <LanguageProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <CartProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <CartDrawer />
+          </CartProvider>
         </LanguageProvider>
       </body>
     </html>

@@ -4,282 +4,336 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllCompetitions } from "@/lib/data";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ArrowRight, Calendar, ChevronRight } from "lucide-react";
 
-const SHOWS = [
-  { day: "14", mo: "Jun", title: "Midsummer Qualifier", series: "Suomi Open series · Prelim → Advanced", disc: "Dressage · Working Hunter", entries: 147, open: true },
-  { day: "21", mo: "Jun", title: "Youth Pony Club Spring", series: "Under-16 · All abilities", disc: "In-Hand · Showmanship", entries: 82, open: true },
-  { day: "28", mo: "Jun", title: "Nordic Eventing Invitational", series: "Dressage test · BE90–BE100", disc: "Eventing · Dressage", entries: 61, open: false },
-  { day: "05", mo: "Jul", title: "Working Hunter Summer Series", series: "Round 2 of 4 · Open & Novice", disc: "Working Hunter", entries: null as number | null, open: false },
+const STEPS = [
+  { en: "Pick a class", fi: "Valitse luokka", descEn: "Browse 60+ classes every month. Every class is €5.", descFi: "Selaa yli 60 luokkaa kuukausittain. Jokainen luokka on €5." },
+  { en: "Upload your photo", fi: "Lataa kuva", descEn: "One clear, unedited photo of your horse from your own yard.", descFi: "Yksi editoimaton kuva hevosestasi omalta tallilta." },
+  { en: "Licensed scoring", fi: "Ammattituomari", descEn: "FEI-credentialed judges score within 72 hours with full written feedback.", descFi: "FEI-tuomarit pisteyttävät 72 tunnin sisällä täydellisellä palautteella." },
+  { en: "Win real rosettes", fi: "Voita oikea rusetti", descEn: "Every entrant receives a numbered rosette posted to their door. Top 3 win prize money.", descFi: "Jokainen osallistuja saa numeroidun rusetin. Kolme parasta jakavat palkintopotin." },
+];
+
+const DISCIPLINES = [
+  { icon: "🏆", en: "Dressage", fi: "Kouluratsastus", count: 12 },
+  { icon: "🌿", en: "Working Hunter", fi: "Ratsukkoluokka", count: 9 },
+  { icon: "⭐", en: "Showjumping", fi: "Esteet", count: 6 },
+  { icon: "🎀", en: "Showmanship", fi: "Näyttelyluokka", count: 7 },
+  { icon: "🐴", en: "In-Hand", fi: "Kädessä", count: 8 },
+  { icon: "🎖️", en: "Veteran", fi: "Veteraani", count: 4 },
+  { icon: "🌟", en: "Youngstock", fi: "Varsat", count: 5 },
+  { icon: "🏅", en: "Best of Breed", fi: "Parhaimmisto", count: 6 },
 ];
 
 export default function HomePage() {
   const { lang } = useLanguage();
   const fi = lang === "fi";
   const competitions = getAllCompetitions();
-  const featured = competitions[0];
-
-  const S = { fontFamily: "var(--f-mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "var(--ink-soft)" };
+  const openShows = competitions.filter((c) => c.status === "open");
+  const upcomingShows = competitions.filter((c) => c.status === "upcoming");
 
   return (
-    <div style={{ background: "var(--paper)", color: "var(--ink)" }}>
+    <div style={{ background: "var(--bg)" }}>
 
       {/* ── HERO ── */}
-      <main className="page">
-        <section style={{ padding: "48px 0 80px", borderBottom: "1px solid var(--rule)" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 64, alignItems: "end" }}>
+      <section className="hero">
+        <div className="page" style={{ position: "relative", zIndex: 1 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
             <div>
-              <div className="kicker" style={{ marginBottom: 32 }}>Est. Helsinki · 2026 · {fi ? "Online-hevosshowt" : "Online horse shows"}</div>
-              <h1 style={{ fontSize: "clamp(56px,8.5vw,128px)", letterSpacing: "-0.035em", fontWeight: 350 }}>
-                {fi ? <>Kilpaile<br />tallilta.<br />Voita <em style={{ color: "var(--brass-dark)" }}>oikea</em><br />rusetti.</> : <>Ride from<br />the yard.<br />Win <em style={{ color: "var(--brass-dark)" }}>real</em><br />rosettes.</>}
+              <div className="section-label">{fi ? "Online-hevosshowt · Helsinki 2026" : "Online horse shows · Helsinki 2026"}</div>
+              <h1 style={{ fontSize: "clamp(40px, 5.5vw, 68px)", lineHeight: 1.1, marginBottom: 24, marginTop: 12 }}>
+                {fi ? (
+                  <>Kilpaile kotoa.<br /><span style={{ color: "var(--brand)" }}>Voita oikea rusetti.</span></>
+                ) : (
+                  <>Compete from<br />the yard.<br /><span style={{ color: "var(--brand)" }}>Win real rosettes.</span></>
+                )}
               </h1>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "24px 0", borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)", margin: "32px 0 28px" }}>
-                {[{ num: "€5", label: fi ? "Luokkamaksu" : "Per class entry" }, { num: "47", label: fi ? "Lisensoidut tuomarit" : "Licensed judges" }, { num: "12", label: fi ? "Lajia" : "Disciplines" }].map(({ num, label }) => (
+              <p style={{ fontSize: 18, color: "var(--text-muted)", maxWidth: 440, lineHeight: 1.7, marginBottom: 32 }}>
+                {fi
+                  ? "Ilmoittaudu online-hevosshowhin, saa palaute lisensoidulta tuomarilta ja voita oikea rusetti — kaikki kotitalliltasi käsin."
+                  : "Enter online horse shows, get scored by a licensed judge, and win a real rosette posted to your door — all from your own yard."}
+              </p>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <Link href="/competitions" className="btn btn-primary btn-lg">
+                  {fi ? "Selaa kilpailuja" : "Browse shows"} <ArrowRight size={16} />
+                </Link>
+                <Link href="/about" className="btn btn-secondary btn-lg">
+                  {fi ? "Miten toimii" : "How it works"}
+                </Link>
+              </div>
+              <div style={{ display: "flex", gap: 32, marginTop: 40, paddingTop: 32, borderTop: "1px solid var(--border)" }}>
+                {[
+                  { num: "€5", label: fi ? "Per luokka" : "Per class entry" },
+                  { num: "47", label: fi ? "Tuomaria" : "Licensed judges" },
+                  { num: "12", label: fi ? "Lajia" : "Disciplines" },
+                ].map(({ num, label }) => (
                   <div key={label}>
-                    <div className="bignum" style={{ fontSize: 48 }}>{num}</div>
-                    <span style={S}>{label}</span>
+                    <div style={{ fontSize: 28, fontWeight: 800, color: "var(--brand)", lineHeight: 1 }}>{num}</div>
+                    <div style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>{label}</div>
                   </div>
                 ))}
               </div>
-              <div style={{ display: "flex", gap: 12 }}>
-                <Link href="/competitions" className="btn-suomi lg">{fi ? "Selaa kilpailuja" : "Browse shows"} <span className="arrow">→</span></Link>
-                <Link href="/about" className="btn-suomi ghost lg">{fi ? "Miten toimii" : "How it works"}</Link>
-              </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-              <div style={{ position: "relative", aspectRatio: "4/5", width: "100%", overflow: "hidden" }}>
+
+            <div style={{ position: "relative" }}>
+              <div style={{ borderRadius: "var(--r-xl)", overflow: "hidden", aspectRatio: "4/5", position: "relative", boxShadow: "var(--shadow-xl)" }}>
                 <Image src="/images/hero-horse.jpg" alt="Horse show" fill style={{ objectFit: "cover" }} priority />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%)" }} />
+                <div style={{ position: "absolute", bottom: 20, left: 20, right: 20 }}>
+                  <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: "var(--r-md)", padding: "14px 18px", backdropFilter: "blur(8px)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ fontSize: 20 }}>🏆</span>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>Spring Open Show 2026</div>
+                        <div style={{ fontSize: 12, color: "var(--brand)", fontWeight: 600 }}>
+                          {fi ? "Ilmoittautuminen auki" : "Entries open"} · 8 {fi ? "luokkaa" : "classes"}
+                        </div>
+                      </div>
+                      <span className="badge badge-green" style={{ marginLeft: "auto" }}>
+                        <span className="badge-dot" />{fi ? "Auki" : "Open"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", ...S }}>
-                <span>No.001 — {fi ? "Kevätkilpailu" : "Spring Qualifier"}</span>
-                <span>Helsinki → Online</span>
+              <div style={{ position: "absolute", top: -16, right: -16, background: "white", borderRadius: "var(--r-lg)", padding: "14px 18px", boxShadow: "var(--shadow-md)", border: "1px solid var(--border)" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--text-muted)", marginBottom: 4 }}>{fi ? "Tällä hetkellä" : "Prize pool"}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "var(--gold)" }}>€500</div>
+                <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{fi ? "Palkintopotti" : "to be won"}</div>
               </div>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
       {/* ── TICKER ── */}
-      <div style={{ padding: "18px 0", background: "var(--ink)", color: "var(--paper)", overflow: "hidden" }}>
-        <div style={{ display: "flex", gap: 48, fontFamily: "var(--f-mono)", fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", whiteSpace: "nowrap", animation: "suomi-scroll 60s linear infinite" }}>
+      <div style={{ background: "var(--brand)", color: "white", padding: "14px 0", overflow: "hidden" }}>
+        <div style={{ display: "flex", gap: 48, fontFamily: "var(--f-mono)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", whiteSpace: "nowrap", animation: "suomi-scroll 60s linear infinite" }}>
           {[0, 1].map((i) => (
             <span key={i} style={{ display: "flex", gap: 48, flexShrink: 0 }}>
-              <span>{fi ? "Ilmoittaudu ennen 15. päivää" : "Enter by the 15th"}</span><span style={{ color: "var(--brass)" }}>✦</span>
-              <span>{fi ? "Kouluratsastus — €5" : "Dressage Prelim — €5"}</span><span style={{ color: "var(--brass)" }}>✦</span>
-              <span>{fi ? "Nuorten ratsastus — €5" : "Working Hunter Youth — €5"}</span><span style={{ color: "var(--brass)" }}>✦</span>
-              <span>{fi ? "Tulokset joka sunnuntai" : "Live results every Sunday"}</span><span style={{ color: "var(--brass)" }}>✦</span>
-              <span>{fi ? "47 tuomaria · 12 lajia" : "47 judges · 12 disciplines"}</span><span style={{ color: "var(--brass)" }}>✦</span>
-              <span>{fi ? "Rusetit toimitetaan kotiin" : "Rosettes shipped worldwide"}</span><span style={{ color: "var(--brass)" }}>✦</span>
+              <span>{fi ? "Ilmoittaudu ennen 15. päivää" : "Enter before the 15th"}</span><span style={{ opacity: 0.5 }}>✦</span>
+              <span>{fi ? "Jokainen luokka €5" : "Every class €5"}</span><span style={{ opacity: 0.5 }}>✦</span>
+              <span>{fi ? "47 lisensioitua tuomaria" : "47 licensed judges"}</span><span style={{ opacity: 0.5 }}>✦</span>
+              <span>{fi ? "Rusetit toimitetaan kotiin" : "Rosettes shipped to your door"}</span><span style={{ opacity: 0.5 }}>✦</span>
+              <span>{fi ? "12 lajia auki" : "12 disciplines open"}</span><span style={{ opacity: 0.5 }}>✦</span>
+              <span>{fi ? "Tulokset joka sunnuntai" : "Results every Sunday"}</span><span style={{ opacity: 0.5 }}>✦</span>
             </span>
           ))}
         </div>
       </div>
 
-      {/* ── FEATURED SHOW ── */}
-      <main className="page">
-        <section>
-          <div className="section-head">
-            <div>
-              <div className="kicker" style={{ marginBottom: 20 }}>{fi ? "Nostettu esiin" : "Featured show"}</div>
-              <h2>{fi ? <>Kesäkuun Qualifier —<br />ilmoittautuminen auki.</> : <>The Midsummer Qualifier —<br />open for entries.</>}</h2>
+      {/* ── SHOWS OPEN THIS MONTH ── */}
+      {openShows.length > 0 && (
+        <section style={{ padding: "80px 0 40px" }}>
+          <div className="page">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40 }}>
+              <div>
+                <div className="section-label">{fi ? "Tällä hetkellä auki" : "Open now"}</div>
+                <h2 style={{ marginTop: 8 }}>{fi ? "Tämän kuun avoimet showt." : "Shows open this month."}</h2>
+              </div>
+              <Link href="/competitions" className="btn btn-secondary">{fi ? "Näytä kaikki →" : "View all →"}</Link>
             </div>
-            <Link href={featured ? `/competitions/${featured.id}` : "/competitions"} className="link-arrow">{fi ? "Katso ohjelma →" : "See full programme →"}</Link>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", border: "1px solid var(--rule)", background: "var(--paper)" }}>
-            <div style={{ position: "relative", aspectRatio: "5/4" }}>
-              <Image src="/images/hero-horse.jpg" alt="Featured show" fill style={{ objectFit: "cover" }} />
-            </div>
-            <div style={{ padding: 48, display: "flex", flexDirection: "column", gap: 24 }}>
-              <div style={{ display: "flex", gap: 8 }}>
-                <span className="suomi-tag brass-tag"><span className="dot" />{fi ? "Ilmoittautuminen auki" : "Entries open"}</span>
-                <span className="suomi-tag">{fi ? "Sulkeutuu 20. kesäk." : "Closes 20 Jun"}</span>
-              </div>
-              <h3 style={{ fontSize: 40 }}>{fi ? "Kesäkuun Qualifier" : "Midsummer Qualifier"}<br /><em style={{ color: "var(--ink-soft)", fontSize: 28 }}>{fi ? "— Suomi Open 2026" : "— Suomi Open 2026"}</em></h3>
-              <p style={{ color: "var(--ink-soft)", maxWidth: 460 }}>{fi ? "Seitsemän luokkaa kouluratsastuksessa, ratsukkoluokissa ja in-hand. Lisensoitu tuomari. Voittajat etenevät finaaliin lokakuussa." : "Seven classes across dressage, working hunter and in-hand. Licensed FEI judges. Winners ride through to the Suomi Open Final in October."}</p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 24, padding: "20px 0", borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)" }}>
-                {[{ num: "14", label: fi ? "Kesäkuuta" : "June opens" }, { num: "€5", label: fi ? "Per luokka" : "Per class" }, { num: "7", label: fi ? "Luokkaa" : "Classes" }].map(({ num, label }) => (
-                  <div key={label}><div className="bignum" style={{ fontSize: 36 }}>{num}</div><span style={{ ...S, marginTop: 4, display: "block" }}>{label}</span></div>
-                ))}
-              </div>
-              <div style={{ display: "flex", gap: 12 }}>
-                <Link href={featured ? `/competitions/${featured.id}` : "/competitions"} className="btn-suomi">{fi ? "Ilmoittaudu →" : "Enter now →"}</Link>
-                <Link href="/competitions" className="btn-suomi ghost">{fi ? "Näytä tiedot" : "View details"}</Link>
-              </div>
+            <div style={{ border: "1px solid var(--border)", borderRadius: "var(--r-xl)", overflow: "hidden" }}>
+              {openShows.map((show, idx) => {
+                const parts = show.date.split(" ");
+                const month = parts[0]?.slice(0, 3) ?? "";
+                const day = parts[1]?.replace(/\D/g, "") ?? "1";
+                return (
+                  <Link key={show.id} href={`/competitions/${show.id}`}
+                    style={{ display: "grid", gridTemplateColumns: "80px 1fr auto auto", gap: 20, alignItems: "center", padding: "20px 24px", borderBottom: idx < openShows.length - 1 ? "1px solid var(--border)" : "none", textDecoration: "none", background: "white", transition: "background 0.15s", color: "inherit" }}>
+                    <div style={{ textAlign: "center", background: "var(--brand-bg)", borderRadius: "var(--r-md)", padding: "10px 0" }}>
+                      <div style={{ fontSize: 26, fontWeight: 800, lineHeight: 1, color: "var(--brand)" }}>{day}</div>
+                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--brand)", marginTop: 2 }}>{month}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>{show.name}</div>
+                      <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+                        <span style={{ fontSize: 13, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
+                          <Calendar size={13} /> {show.date}
+                        </span>
+                        <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
+                          {show.classes.length} {fi ? "luokkaa" : "classes"}
+                        </span>
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: "var(--brand)" }}>
+                      €5 <span style={{ fontSize: 12, fontWeight: 500, color: "var(--text-muted)" }}>/{fi ? "luokka" : "class"}</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span className="badge badge-green"><span className="badge-dot" />{fi ? "Auki" : "Open"}</span>
+                      <ChevronRight size={16} color="var(--text-subtle)" />
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
-      </main>
+      )}
 
       {/* ── HOW IT WORKS ── */}
-      <main className="page">
-        <section style={{ paddingTop: 40 }}>
-          <div className="section-head">
-            <div>
-              <div className="kicker" style={{ marginBottom: 20 }}>{fi ? "Miten toimii" : "How it works"}</div>
-              <h2>{fi ? <>Neljä askelta tallilta<br />rusetin postilaatikkoosi.</> : <>Four steps between<br />your arena and a rosette.</>}</h2>
-            </div>
-            <Link href="/about" className="link-arrow">{fi ? "Koko tarina →" : "The full story →"}</Link>
+      <section style={{ background: "var(--bg-muted)", padding: "80px 0" }}>
+        <div className="page">
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <div className="section-label" style={{ justifyContent: "center" }}>{fi ? "Miten toimii" : "How it works"}</div>
+            <h2 style={{ marginTop: 8 }}>{fi ? "Neljä askelta rusetille." : "Four steps to a rosette."}</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", borderTop: "1px solid var(--rule)" }}>
-            {[
-              { n: "01", title: fi ? "Valitse luokka" : "Pick a class", desc: fi ? "Selaa yli 60 luokkaa kuukausittain. Jokainen luokka on €5." : "Browse 60+ classes every month. Filter by discipline and level. Every class is €5." },
-              { n: "02", title: fi ? "Kuvaa suorituksesi" : "Film your round", desc: fi ? "Yksi editoimaton otto. Kuvaa puhelimella maneesissa." : "One unedited take. Shoot on a phone from the arena. We publish the exact framing guide." },
-              { n: "03", title: fi ? "Lisensioitu pisteytys" : "Licensed scoring", desc: fi ? "FEI-hyväksytyt tuomarit pisteyttävät 72 tunnin sisällä täydellisellä palautteella." : "FEI-credentialed judges score within 72 hours, with full feedback." },
-              { n: "04", title: fi ? "Oikeat rusetit" : "Real rosettes", desc: fi ? "Jokainen osallistuja saa rusetin. Kolme parasta jakavat palkintopotin." : "Every entrant receives a rosette. Top three receive prize money, delivered to your yard." },
-            ].map((s, i) => (
-              <div key={s.n} style={{ padding: 40, paddingLeft: i === 0 ? 0 : 32, paddingRight: i === 3 ? 0 : 32, borderRight: i < 3 ? "1px solid var(--rule)" : "none" }}>
-                <div style={{ fontFamily: "var(--f-display)", fontSize: 14, color: "var(--brass-dark)", marginBottom: 48, fontStyle: "italic" }}>N<sup>o</sup> {s.n}</div>
-                <h4 style={{ fontFamily: "var(--f-display)", fontSize: 28, fontWeight: 350, letterSpacing: "-0.015em", marginBottom: 12 }}>{s.title}</h4>
-                <p style={{ fontSize: 14, color: "var(--ink-soft)", margin: 0 }}>{s.desc}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 }}>
+            {STEPS.map((s, i) => (
+              <div key={i} style={{ background: "white", borderRadius: "var(--r-lg)", padding: 28, border: "1px solid var(--border)" }}>
+                <div style={{ width: 40, height: 40, background: "var(--brand-bg)", border: "2px solid var(--brand-light)", borderRadius: "var(--r-md)", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 14, color: "var(--brand)", marginBottom: 20 }}>
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <h4 style={{ marginBottom: 10 }}>{fi ? s.fi : s.en}</h4>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, lineHeight: 1.6 }}>{fi ? s.descFi : s.descEn}</p>
               </div>
             ))}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
       {/* ── DISCIPLINES ── */}
-      <main className="page">
-        <section style={{ paddingTop: 40 }}>
-          <div className="section-head">
+      <section style={{ padding: "80px 0" }}>
+        <div className="page">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40 }}>
             <div>
-              <div className="kicker" style={{ marginBottom: 20 }}>{fi ? "Lajit" : "Disciplines"}</div>
-              <h2>{fi ? "Luokat jokaiselle ratsastajalle." : "Classes for every rider."}</h2>
+              <div className="section-label">{fi ? "Lajit" : "Disciplines"}</div>
+              <h2 style={{ marginTop: 8 }}>{fi ? "Luokat jokaiselle ratsastajalle." : "Classes for every rider."}</h2>
             </div>
-            <Link href="/competitions" className="link-arrow">{fi ? "Kaikki lajit →" : "All disciplines →"}</Link>
+            <Link href="/competitions" className="btn btn-secondary">{fi ? "Kaikki lajit →" : "All disciplines →"}</Link>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", border: "1px solid var(--rule)" }}>
-            {[
-              { count: "12", name: fi ? "Kouluratsastus" : "Dressage" },
-              { count: "09", name: fi ? "Ratsukkoluokka" : "Working Hunter" },
-              { count: "06", name: fi ? "Esteet" : "Showjumping" },
-              { count: "07", name: fi ? "Näyttelyluokka" : "Showmanship" },
-            ].map((d, i) => (
-              <Link key={d.name} href="/competitions"
-                style={{ aspectRatio: "1", borderRight: i < 3 ? "1px solid var(--rule)" : "none", padding: 28, display: "flex", flexDirection: "column", justifyContent: "space-between", cursor: "pointer" }}>
-                <div style={S}>{d.count} {fi ? "luokkaa auki" : "open classes"}</div>
-                <div style={{ fontFamily: "var(--f-display)", fontSize: 28 }}>{d.name}</div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      </main>
-
-      {/* ── UPCOMING SHOWS ── */}
-      <main className="page">
-        <section style={{ paddingTop: 40 }}>
-          <div className="section-head">
-            <div>
-              <div className="kicker" style={{ marginBottom: 20 }}>{fi ? "Tulevat" : "Upcoming"}</div>
-              <h2>{fi ? "Tämän kuun avoimet showt." : "Shows open this month."}</h2>
-            </div>
-            <Link href="/competitions" className="link-arrow">{fi ? "Näytä kaikki →" : "View all →"}</Link>
-          </div>
-          <div style={{ borderTop: "1px solid var(--ink)" }}>
-            {SHOWS.map((s) => (
-              <Link key={s.title} href="/competitions"
-                style={{ display: "grid", gridTemplateColumns: "100px 1fr 1fr 120px 120px 150px", gap: 24, alignItems: "center", padding: "24px 0", borderBottom: "1px solid var(--rule)" }}>
-                <div style={{ fontFamily: "var(--f-display)", fontStyle: "italic" }}>
-                  <div style={{ fontSize: 32, lineHeight: 1 }}>{s.day}</div>
-                  <span style={{ ...S, marginTop: 6, display: "block", fontStyle: "normal" }}>{s.mo}</span>
-                </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+            {DISCIPLINES.map((d) => (
+              <Link key={d.en} href="/competitions" className="discipline-tile">
+                <span style={{ fontSize: 28 }}>{d.icon}</span>
                 <div>
-                  <div style={{ fontFamily: "var(--f-display)", fontSize: 22 }}>{s.title}</div>
-                  <div style={S}>{s.series}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>{fi ? d.fi : d.en}</div>
+                  <div style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 2 }}>{d.count} {fi ? "luokkaa auki" : "open classes"}</div>
                 </div>
-                <div style={S}>{s.disc}</div>
-                <div style={{ fontSize: 14 }}>
-                  {s.entries !== null ? <><span style={{ fontFamily: "var(--f-display)", fontSize: 20 }}>{s.entries}</span> <span style={{ color: "var(--ink-soft)" }}>{fi ? "os." : "entries"}</span></> : <span style={{ fontFamily: "var(--f-display)", fontSize: 20 }}>—</span>}
-                </div>
-                <div style={{ fontFamily: "var(--f-display)", fontSize: 20 }}>€5 <span style={{ ...S, fontSize: 10 }}>{fi ? "/ luokka" : "/ class"}</span></div>
-                {s.open
-                  ? <span className="suomi-tag brass-tag"><span className="dot" />{fi ? "Auki" : "Open"}</span>
-                  : <span className="suomi-tag"><span className="dot" />{fi ? "Aukeaa pian" : "Opens soon"}</span>}
               </Link>
             ))}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
-      {/* ── PRIZE STORY ── */}
-      <main className="page">
-        <section style={{ paddingTop: 40 }}>
+      {/* ── PRIZES ── */}
+      <section style={{ background: "var(--bg-muted)", padding: "80px 0" }}>
+        <div className="page">
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}>
             <div>
-              <div className="kicker" style={{ marginBottom: 24 }}>{fi ? "Oikeat rusetit. Oikeat palkinnot." : "Real rosettes. Real prizes."}</div>
-              <h2>{fi ? <>Pieni maksu.<br />Oikea palkinto.</> : <>Low entry.<br />Proper reward.</>}</h2>
-              <p style={{ fontSize: 18, maxWidth: 480, marginTop: 24, color: "var(--ink-2)" }}>
-                {fi ? "Jokainen luokka on €5. Jokainen osallistuja saa numeroidun rusetin. Kolme parasta jakavat palkintopotin — ja kokonaisvoittaja voittaa €500." : "Every class is €5. Every entrant receives a numbered rosette. The top three split a prize pool — and the overall champion wins €500 and a season sponsorship."}
+              <div className="section-label">{fi ? "Oikeat palkinnot" : "Real prizes"}</div>
+              <h2 style={{ marginTop: 8 }}>{fi ? "Pieni maksu. Oikea palkinto." : "Low entry. Proper reward."}</h2>
+              <p style={{ fontSize: 17, color: "var(--text-muted)", maxWidth: 440, marginTop: 20, lineHeight: 1.7 }}>
+                {fi
+                  ? "Jokainen luokka on €5. Jokainen osallistuja saa numeroidun rusetin postissa. Kolme parasta jakavat palkintopotin — ja kokonaisvoittaja voittaa €500."
+                  : "Every class is €5. Every entrant receives a numbered rosette. The top three split a prize pool — and the overall champion wins €500 and a season sponsorship."}
               </p>
-              <div style={{ display: "flex", gap: 32, marginTop: 40, paddingTop: 32, borderTop: "1px solid var(--rule)" }}>
-                <div><div className="bignum" style={{ fontSize: 56 }}>€500</div><span style={S}>{fi ? "Kokonaisvoittaja" : "Overall champion"}</span></div>
-                <div><div className="bignum" style={{ fontSize: 56 }}>100%</div><span style={S}>{fi ? "Saa rusetin" : "Get a rosette"}</span></div>
+              <div style={{ display: "flex", gap: 40, marginTop: 36, paddingTop: 32, borderTop: "1px solid var(--border)" }}>
+                <div>
+                  <div style={{ fontSize: 40, fontWeight: 800, color: "var(--gold)", lineHeight: 1 }}>€500</div>
+                  <div style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 6 }}>{fi ? "Kokonaisvoittaja" : "Overall champion"}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 40, fontWeight: 800, color: "var(--brand)", lineHeight: 1 }}>100%</div>
+                  <div style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 6 }}>{fi ? "Saa rusetin" : "Get a rosette"}</div>
+                </div>
               </div>
-              <Link href="/sponsors" className="link-arrow" style={{ marginTop: 40, display: "inline-flex" }}>{fi ? "Katso kaikki palkinnot →" : "See all prizes →"}</Link>
+              <Link href="/sponsors" className="btn btn-secondary" style={{ marginTop: 28 }}>
+                {fi ? "Katso kaikki palkinnot →" : "See all prizes →"}
+              </Link>
             </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <svg viewBox="0 0 240 240" width="240" height="240">
-                <defs>
-                  <pattern id="stripes" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(45)">
-                    <rect width="2" height="4" fill="#b8924f"/><rect x="2" width="2" height="4" fill="#8a6b36"/>
-                  </pattern>
-                </defs>
-                <g transform="translate(120 100)">
-                  <circle r="78" fill="url(#stripes)" stroke="#8a6b36" strokeWidth="1"/>
-                  <circle r="78" fill="none" stroke="#0f1310" strokeWidth="0.5" strokeDasharray="2 3"/>
-                  <circle r="60" fill="#eee7d5" stroke="#0f1310" strokeWidth="0.5"/>
-                  <circle r="58" fill="none" stroke="#b8924f" strokeWidth="0.5"/>
-                  <text textAnchor="middle" y="-8" fontFamily="Fraunces, serif" fontSize="11" fill="#0f1310" letterSpacing="2">SUOMI</text>
-                  <text textAnchor="middle" y="14" fontFamily="Fraunces, serif" fontSize="32" fontStyle="italic" fill="#0f1310">1st</text>
-                  <text textAnchor="middle" y="36" fontFamily="JetBrains Mono" fontSize="7" fill="#4a4f49" letterSpacing="1.5">CHAMPION</text>
-                </g>
-                <path d="M90 160 L78 230 L100 210 L110 240 L120 170 Z" fill="#b8924f" stroke="#8a6b36" strokeWidth="1"/>
-                <path d="M150 160 L162 230 L140 210 L130 240 L120 170 Z" fill="#8a6b36" stroke="#6d5525" strokeWidth="1"/>
-              </svg>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              {[
+                { icon: "🥇", title: fi ? "1. sija" : "1st place", desc: fi ? "Rusetti + €100 + palkintopotin osuus" : "Rosette + €100 + prize pool share", bg: "var(--gold-bg)", border: "var(--gold-light)" },
+                { icon: "🥈", title: fi ? "2. sija" : "2nd place", desc: fi ? "Rusetti + €50" : "Rosette + €50", bg: "var(--bg-subtle)", border: "var(--border)" },
+                { icon: "🥉", title: fi ? "3. sija" : "3rd place", desc: fi ? "Rusetti + €25" : "Rosette + €25", bg: "var(--bg-subtle)", border: "var(--border)" },
+                { icon: "🎀", title: fi ? "Kaikki osallistujat" : "All entrants", desc: fi ? "Numeroitu rusetti postissa" : "Numbered rosette by post", bg: "var(--brand-bg)", border: "var(--brand-light)" },
+              ].map((p) => (
+                <div key={p.title} style={{ background: p.bg, border: `1px solid ${p.border}`, borderRadius: "var(--r-lg)", padding: 20 }}>
+                  <div style={{ fontSize: 28, marginBottom: 10 }}>{p.icon}</div>
+                  <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>{p.title}</div>
+                  <div style={{ fontSize: 13, color: "var(--text-muted)" }}>{p.desc}</div>
+                </div>
+              ))}
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
       {/* ── TESTIMONIAL ── */}
-      <main className="page">
-        <section style={{ paddingTop: 40 }}>
-          <div style={{ maxWidth: 900, margin: "0 auto" }}>
-            <div className="kicker" style={{ marginBottom: 32 }}>{fi ? "Tallilta" : "From the yard"}</div>
-            <p style={{ fontFamily: "var(--f-display)", fontSize: "clamp(28px,3.5vw,48px)", lineHeight: 1.2, letterSpacing: "-0.015em", fontWeight: 350 }}>
-              {fi
-                ? <>&ldquo;Asun kaksi tuntia lähimmästä kilpailusta. Suomi tarkoittaa, että tyttäreni voi kilpailla joka viikonloppu — <em style={{ color: "var(--brass-dark)" }}>ja hän on oikeasti sijoittunut</em>. Rusetit ovat aitoja.&rdquo;</>
-                : <>&ldquo;I live two hours from the nearest judged show. Suomi means my daughter can compete every weekend — and <em style={{ color: "var(--brass-dark)" }}>she&apos;s actually placed</em>. The rosettes are real.&rdquo;</>}
-            </p>
-            <div style={{ marginTop: 48, display: "flex", gap: 16, alignItems: "center" }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--bone)", border: "1px solid var(--rule)", display: "flex", alignItems: "center", justifyContent: "center", ...S }}>MK</div>
-              <div>
-                <div style={{ fontFamily: "var(--f-display)", fontSize: 20 }}>Marja Koskinen</div>
-                <div style={S}>{fi ? "Valmentaja · Tampere" : "Trainer · Tampere"}</div>
+      <section style={{ padding: "80px 0" }}>
+        <div className="page" style={{ maxWidth: 800 }}>
+          <div style={{ textAlign: "center" }}>
+            <div className="section-label" style={{ justifyContent: "center" }}>{fi ? "Tallilta" : "From the yard"}</div>
+            <blockquote style={{ fontSize: "clamp(20px, 2.5vw, 30px)", fontWeight: 600, lineHeight: 1.4, color: "var(--text)", marginTop: 24, letterSpacing: "-0.02em" }}>
+              {fi ? (
+                <>&ldquo;Asun kaksi tuntia lähimmästä kilpailusta. Nättely tarkoittaa, että tyttäreni voi kilpailla joka viikonloppu — <em style={{ color: "var(--brand)", fontStyle: "normal" }}>ja hän on oikeasti sijoittunut</em>. Rusetit ovat aitoja.&rdquo;</>
+              ) : (
+                <>&ldquo;I live two hours from the nearest judged show. Nättely means my daughter can compete every weekend — and <em style={{ color: "var(--brand)", fontStyle: "normal" }}>she&apos;s actually placed</em>. The rosettes are real.&rdquo;</>
+              )}
+            </blockquote>
+            <div style={{ marginTop: 32, display: "flex", gap: 16, alignItems: "center", justifyContent: "center" }}>
+              <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--brand-light)", display: "grid", placeItems: "center", fontWeight: 700, color: "var(--brand)", fontSize: 16 }}>MK</div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontWeight: 700, fontSize: 15 }}>Marja Koskinen</div>
+                <div style={{ fontSize: 13, color: "var(--text-muted)" }}>{fi ? "Valmentaja · Tampere" : "Trainer · Tampere"}</div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── UPCOMING ── */}
+      {upcomingShows.length > 0 && (
+        <section style={{ background: "var(--bg-muted)", padding: "60px 0" }}>
+          <div className="page">
+            <div className="section-label">{fi ? "Tulossa pian" : "Coming soon"}</div>
+            <h2 style={{ marginTop: 8, marginBottom: 32 }}>{fi ? "Seuraavat kilpailut." : "Upcoming shows."}</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
+              {upcomingShows.map((show) => (
+                <div key={show.id} style={{ background: "white", border: "1px solid var(--border)", borderRadius: "var(--r-lg)", padding: 24 }}>
+                  <span className="badge badge-gray" style={{ marginBottom: 16, display: "inline-flex" }}><span className="badge-dot" />{fi ? "Tulossa" : "Upcoming"}</span>
+                  <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{show.name}</div>
+                  <div style={{ fontSize: 14, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
+                    <Calendar size={14} /> {show.date}
+                  </div>
+                  <div style={{ fontSize: 14, color: "var(--text-muted)", marginTop: 4 }}>
+                    {show.classes.length} {fi ? "luokkaa" : "classes"}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
-      </main>
+      )}
 
       {/* ── CTA ── */}
-      <main className="page">
-        <section style={{ paddingTop: 40 }}>
-          <div style={{ background: "var(--ink)", color: "var(--paper)", padding: "clamp(48px,8vw,96px)", display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 48, alignItems: "end" }}>
+      <section style={{ padding: "80px 0" }}>
+        <div className="page">
+          <div style={{ background: "var(--brand)", borderRadius: "var(--r-xl)", padding: "clamp(40px, 6vw, 72px)", display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 48, alignItems: "center" }}>
             <div>
-              <div className="kicker" style={{ color: "var(--brass)", marginBottom: 24 }}>{fi ? "Valmis ilmoittautumaan?" : "Ready to enter?"}</div>
-              <h2 style={{ color: "var(--paper)", fontSize: "clamp(40px,6vw,88px)" }}>
-                {fi ? <>Seuraava rusettisi<br />on yhden ratsastuksen päässä.</> : <>Your next rosette<br />is one ride away.</>}
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: 16 }}>
+                {fi ? "Valmis ilmoittautumaan?" : "Ready to enter?"}
+              </div>
+              <h2 style={{ color: "white", fontSize: "clamp(28px, 4vw, 48px)" }}>
+                {fi ? "Seuraava rusetin on yhden ratsastuksen päässä." : "Your next rosette is one ride away."}
               </h2>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
-              <p style={{ color: "#c4bca9", maxWidth: 360 }}>{fi ? "Selaa avoimia luokkia ja ilmoittaudu suoraan." : "Browse open classes and enter directly."}</p>
-              <div style={{ display: "flex", gap: 12 }}>
-                <Link href="/competitions" className="btn-suomi brass-btn">{fi ? "Selaa kilpailuja →" : "Browse shows →"}</Link>
-                <Link href="/sponsors" className="btn-suomi" style={{ background: "transparent", color: "var(--paper)", borderColor: "var(--paper)" }}>{fi ? "Sponsorit" : "Sponsors"}</Link>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 16, margin: 0 }}>
+                {fi ? "Selaa avoimia luokkia ja ilmoittaudu suoraan." : "Browse open classes and enter directly."}
+              </p>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <Link href="/competitions" className="btn btn-gold btn-lg">
+                  {fi ? "Selaa kilpailuja →" : "Browse shows →"}
+                </Link>
+                <Link href="/sponsors" className="btn btn-lg" style={{ background: "rgba(255,255,255,0.15)", color: "white", borderColor: "rgba(255,255,255,0.3)" }}>
+                  {fi ? "Sponsorit" : "Sponsors"}
+                </Link>
               </div>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
     </div>
   );
